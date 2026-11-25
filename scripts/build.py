@@ -50,37 +50,42 @@ def esc(s: str) -> str:
 
 # ---------------------------------------------------------------- 部品
 
-def eyecatch(post: dict, cfg: dict, prefix: str, size: str = "") -> str:
-    cat = cfg["categories"][post["category"]]
+def photo_url(post: dict, prefix: str) -> str:
     img = post.get("image") or ""
     if img and not img.startswith("http"):
         img = prefix + img  # リポジトリ内の写真（例: static/photos/xxx.jpg）
-    photo = (f'<img class="eye-photo" src="{esc(img)}" alt="" loading="lazy">' if img else "")
+    return img
+
+
+def visual(post: dict, cfg: dict, prefix: str, cls: str = "") -> str:
+    """記事の画像。写真があれば写真、なければブランドカラーのデザイン画像"""
+    cat = cfg["categories"][post["category"]]
+    img = photo_url(post, prefix)
+    if img:
+        return (f'<div class="vis {cls}"><img src="{esc(img)}" alt="" loading="lazy"></div>')
     return (
-        f'<div class="eye eye-{post["category"]} {size}{" has-photo" if img else ""}">'
-        f'{photo}'
-        f'<img class="eye-logo" src="{prefix}static/logo.png" alt="" aria-hidden="true">'
-        f'<span class="eye-en">{esc(cat["en"])}</span>'
-        f'<span class="eye-word">{esc(post.get("keyword", ""))}</span>'
-        f"</div>"
+        f'<div class="vis vis-fallback fb-{post["category"]} {cls}">'
+        f'<span class="fb-en">{esc(cat["en"])}</span>'
+        f'<span class="fb-word">{esc(post.get("keyword", ""))}</span></div>'
     )
 
 
-def card(post: dict, cfg: dict, prefix: str) -> str:
+def meta(post: dict, cfg: dict) -> str:
     cat = cfg["categories"][post["category"]]
+    return (f'<p class="meta"><span class="cat">{esc(cat["en"])}</span>'
+            f'<time>{post["date"].strftime("%Y.%m.%d")}</time></p>')
+
+
+def card(post: dict, cfg: dict, prefix: str, cls: str = "") -> str:
     return f"""
-<a class="card" href="{prefix}posts/{post['slug']}.html">
-  {eyecatch(post, cfg, prefix)}
-  <div class="card-body">
-    <span class="cat">{esc(cat['name'])}</span>
-    <h3>{esc(post['title'])}</h3>
-    <p>{esc(post['description'])}</p>
-    <time>{jdate(post['date'])}</time>
-  </div>
+<a class="card {cls}" href="{prefix}posts/{post['slug']}.html">
+  {visual(post, cfg, prefix)}
+  {meta(post, cfg)}
+  <h3>{esc(post['title'])}</h3>
 </a>"""
 
 
-def layout(cfg: dict, prefix: str, title: str, body: str, description: str = "", active: str = "") -> str:
+def layout(cfg: dict, prefix: str, title: str, body: str, description: str = "", active: str = "", og_image: str = "") -> str:
     site = cfg["site"]
     on = ' class="on"'
     nav = "".join(
@@ -89,9 +94,10 @@ def layout(cfg: dict, prefix: str, title: str, body: str, description: str = "",
     )
     full_title = f"{title} | {site['title']}" if title != site["title"] else site["title"]
     contest = (
-        f'<a class="contest" href="{esc(site["contest_url"])}">ミセスクイーンコンテスト公式サイト</a>'
+        f'<a href="{esc(site["contest_url"])}">ミセスクイーンコンテスト</a>'
         if site.get("contest_url") else ""
     )
+    foot_cats = "".join(f'<a href="{prefix}category/{k}.html">{esc(c["en"])}</a>' for k, c in cfg["categories"].items())
     return f"""<!doctype html>
 <html lang="ja">
 <head>
@@ -102,30 +108,38 @@ def layout(cfg: dict, prefix: str, title: str, body: str, description: str = "",
 <meta name="description" content="{esc(description or site['description'])}">
 <meta property="og:title" content="{esc(full_title)}">
 <meta property="og:description" content="{esc(description or site['description'])}">
+{f'<meta property="og:image" content="{esc(og_image)}">' if og_image else ''}
+<meta name="theme-color" content="#fbf7f4">
 <link rel="icon" href="{prefix}static/logo.png">
 <link rel="alternate" type="application/rss+xml" href="{prefix}feed.xml" title="{esc(site['title'])}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Shippori+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Shippori+Mincho:wght@500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{prefix}static/style.css">
 </head>
 <body>
+<div class="ticker"><div class="ticker-in"><span>{esc(site['subtitle'])}</span><span>NEW STORIES EVERY MON · WED · FRI</span><span>{esc(site['subtitle'])}</span><span>NEW STORIES EVERY MON · WED · FRI</span><span>{esc(site['subtitle'])}</span><span>NEW STORIES EVERY MON · WED · FRI</span></div></div>
 <header class="site-header">
-  <a class="brand" href="{prefix}index.html">
-    <img src="{prefix}static/logo.png" alt="QUEEEN">
-    <span><b>{esc(site['title'])}</b><small>{esc(site['subtitle'])}</small></span>
-  </a>
+  <div class="bar">
+    <a class="brand" href="{prefix}index.html" aria-label="{esc(site['title'])}">
+      <img src="{prefix}static/logo.png" alt="">
+      <span class="wordmark">QUEEEN<i>magazine</i></span>
+    </a>
+    <a class="about-link" href="{prefix}about.html">ABOUT</a>
+  </div>
   <nav class="nav">{nav}</nav>
 </header>
 <main>
 {body}
 </main>
 <footer class="site-footer">
-  <img src="{prefix}static/logo.png" alt="">
-  <p class="f-title">{esc(site['title'])}</p>
-  <p>{esc(site['description'])}</p>
-  <p class="f-links"><a href="{prefix}about.html">このサイトについて</a>{contest}</p>
-  <p class="copy">© {dt.date.today().year} Mrs. QUEEEN</p>
+  <div class="f-inner">
+    <p class="f-mark">QUEEEN<i>magazine</i></p>
+    <p class="f-desc">{esc(site['description'])}</p>
+    <nav class="f-cats">{foot_cats}</nav>
+    <p class="f-links"><a href="{prefix}about.html">このサイトについて</a>{contest}</p>
+    <p class="copy">© {dt.date.today().year} Mrs. QUEEEN</p>
+  </div>
 </footer>
 </body>
 </html>
@@ -137,34 +151,46 @@ def layout(cfg: dict, prefix: str, title: str, body: str, description: str = "",
 def page_index(cfg: dict, posts: list[dict]) -> str:
     if not posts:
         return layout(cfg, "", cfg["site"]["title"], "<p class='empty'>記事は準備中です。</p>")
-    top, rest = posts[0], posts[1:]
-    cat = cfg["categories"][top["category"]]
+    top = posts[0]
+    pickup, rest = posts[1:3], posts[3:]
     hero = f"""
 <section class="hero">
-  <a href="posts/{top['slug']}.html" class="hero-link">
-    {eyecatch(top, cfg, "", "big")}
+  <a href="posts/{top['slug']}.html">
+    {visual(top, cfg, "", "hero-vis")}
     <div class="hero-text">
-      <span class="label">NEW</span><span class="cat">{esc(cat['name'])}</span>
+      <span class="badge">NEW</span>
+      {meta(top, cfg)}
       <h1>{esc(top['title'])}</h1>
       <p>{esc(top['description'])}</p>
-      <time>{jdate(top['date'])}</time>
+      <span class="more">READ STORY <b>→</b></span>
     </div>
   </a>
 </section>"""
+    picks = "".join(card(p, cfg, "", "wide") for p in pickup)
+    cats = "".join(
+        f'<a class="cat-tile" href="category/{k}.html"><span class="ct-en">{esc(c["en"])}</span>'
+        f'<span class="ct-ja">{esc(c["name"])}</span>'
+        f'<span class="ct-n">{sum(1 for p in posts if p["category"] == k):02d}</span></a>'
+        for k, c in cfg["categories"].items()
+    )
     grid = "".join(card(p, cfg, "") for p in rest[:24])
-    return layout(cfg, "", cfg["site"]["title"], hero + f'<h2 class="sec">LATEST<small>新着記事</small></h2><section class="grid">{grid}</section>')
+    body = (hero
+            + f'<section class="sec"><h2 class="sec-title"><span>Pick Up</span><small>注目の記事</small></h2><div class="picks">{picks}</div></section>'
+            + f'<section class="sec"><h2 class="sec-title"><span>Categories</span><small>カテゴリから探す</small></h2><div class="cats">{cats}</div></section>'
+            + (f'<section class="sec"><h2 class="sec-title"><span>Latest</span><small>新着記事</small></h2><div class="grid">{grid}</div></section>' if rest else ""))
+    return layout(cfg, "", cfg["site"]["title"], body, og_image=photo_url(top, ""))
 
 
 def page_category(cfg: dict, key: str, posts: list[dict]) -> str:
     cat = cfg["categories"][key]
     items = [p for p in posts if p["category"] == key]
     grid = "".join(card(p, cfg, "../") for p in items) or "<p class='empty'>このカテゴリの記事は準備中です。</p>"
-    body = f'<h1 class="sec page">{esc(cat["en"])}<small>{esc(cat["name"])}</small></h1><section class="grid">{grid}</section>'
+    body = (f'<header class="page-head"><p class="ph-en">{esc(cat["en"])}</p><h1>{esc(cat["name"])}</h1>'
+            f'<p class="ph-n">{len(items)} STORIES</p></header><div class="grid">{grid}</div>')
     return layout(cfg, "../", cat["name"], body, active=key)
 
 
 def page_post(cfg: dict, post: dict, posts: list[dict]) -> str:
-    cat = cfg["categories"][post["category"]]
     sources = ""
     if post["sources"]:
         lis = "".join(
@@ -177,33 +203,34 @@ def page_post(cfg: dict, post: dict, posts: list[dict]) -> str:
     if post["category"] in ("wellness", "beauty"):
         note = ('<p class="note">※この記事は一般的な情報をまとめたもので、効果を保証するものではありません。'
                 '体調や肌に不安がある場合は、医師や専門家にご相談ください。</p>')
+    credit = f'<p class="credit">Photo: {esc(post["image_credit"])}</p>' if post.get("image_credit") else ""
     related = [p for p in posts if p["category"] == post["category"] and p["slug"] != post["slug"]][:3]
     if len(related) < 3:
         related += [p for p in posts if p["slug"] != post["slug"] and p not in related][: 3 - len(related)]
     rel = "".join(card(p, cfg, "../") for p in related)
+    cat = cfg["categories"][post["category"]]
     body = f"""
 <article class="post">
-  {eyecatch(post, cfg, "../", "big")}
   <header class="post-head">
-    <a class="cat" href="../category/{post['category']}.html">{esc(cat['name'])}</a>
+    <p class="meta"><a class="cat" href="../category/{post['category']}.html">{esc(cat['en'])}</a><time>{post['date'].strftime('%Y.%m.%d')}</time></p>
     <h1>{esc(post['title'])}</h1>
     <p class="lead">{esc(post['description'])}</p>
-    <time>{jdate(post['date'])}</time>
   </header>
+  {visual(post, cfg, "../", "post-vis")}
+  {credit}
   <div class="post-body">{post['body_html']}</div>
   {note}
   {sources}
-  {('<p class="credit">写真：' + esc(post['image_credit']) + '</p>') if post.get('image_credit') else ''}
+  <p class="back"><a href="../index.html">← TOP</a><a href="../category/{post['category']}.html">{esc(cat['name'])}の記事一覧 →</a></p>
 </article>
-<h2 class="sec">MORE<small>こちらもおすすめ</small></h2>
-<section class="grid">{rel}</section>"""
-    return layout(cfg, "../", post["title"], body, post["description"], active=post["category"])
+<section class="sec"><h2 class="sec-title"><span>More Stories</span><small>こちらもおすすめ</small></h2><div class="grid">{rel}</div></section>"""
+    return layout(cfg, "../", post["title"], body, post["description"], active=post["category"], og_image=photo_url(post, ""))
 
 
 def page_about(cfg: dict) -> str:
     body = f"""
 <article class="post about">
-  <header class="post-head"><h1>このサイトについて</h1></header>
+  <header class="post-head"><p class="meta"><span class="cat">ABOUT</span></p><h1>このサイトについて</h1></header>
   <div class="post-body">
   <p>{esc(cfg['site']['title'])}は、ミセスクイーンコンテストを運営するミセスクイーンが届けるWebマガジンです。
   美容・ファッション・健康・ライフスタイル・自己実現など、毎日を自分らしく輝かせたいミセスのためのヒントをお届けします。</p>
