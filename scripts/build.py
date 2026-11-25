@@ -13,6 +13,8 @@ import markdown
 import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
+import hashlib
+CSS_VER = hashlib.md5((ROOT / "static" / "style.css").read_bytes()).hexdigest()[:8]
 POSTS_DIR = ROOT / "content" / "posts"
 OUT = ROOT / "_site"
 WEEKDAYS = "月火水木金土日"
@@ -115,7 +117,7 @@ def layout(cfg: dict, prefix: str, title: str, body: str, description: str = "",
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Shippori+Mincho:wght@500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{prefix}static/style.css">
+<link rel="stylesheet" href="{prefix}static/style.css?v={CSS_VER}">
 </head>
 <body>
 
