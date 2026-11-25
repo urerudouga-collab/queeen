@@ -224,6 +224,9 @@ def page_post(cfg: dict, post: dict, posts: list[dict]) -> str:
     if post["category"] in ("wellness", "beauty"):
         note = ('<p class="note">※この記事は一般的な情報をまとめたもので、効果を保証するものではありません。'
                 '体調や肌に不安がある場合は、医師や専門家にご相談ください。</p>')
+    if post.get("origin"):
+        note += (f'<p class="note">※この記事は、{post["date"].year}年に{esc(post["origin"].get("site", ""))}で'
+                 '公開された記事を再掲載したものです。内容は公開当時のものです。</p>')
     credit = f'<p class="credit">Photo: {esc(post["image_credit"])}</p>' if post.get("image_credit") else ""
     related = [p for p in posts if p["category"] == post["category"] and p["slug"] != post["slug"]][:3]
     if len(related) < 3:
