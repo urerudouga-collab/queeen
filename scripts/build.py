@@ -227,11 +227,29 @@ def sitemap(cfg: dict, posts: list[dict]) -> str:
     return f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{body}</urlset>'
 
 
+def build_private() -> None:
+    """非公開モード：準備中の画面だけを出す"""
+    OUT.mkdir(parents=True)
+    (OUT / "index.html").write_text(
+        '<!doctype html><html lang="ja"><head><meta charset="utf-8">'
+        '<meta name="viewport" content="width=device-width, initial-scale=1">'
+        '<meta name="robots" content="noindex, nofollow"><title>準備中</title></head>'
+        '<body style="margin:0;display:grid;place-items:center;min-height:100vh;font-family:sans-serif;'
+        'background:#fffafc;color:#7a6a71"><p>ただいま準備中です。</p></body></html>', encoding="utf-8")
+    (OUT / "404.html").write_text((OUT / "index.html").read_text(encoding="utf-8"), encoding="utf-8")
+    (OUT / "robots.txt").write_text("User-agent: *\nDisallow: /\n", encoding="utf-8")
+    (OUT / ".nojekyll").write_text("")
+    print("private mode: placeholder only")
+
+
 def main() -> None:
     cfg = load_config()
     posts = load_posts()
     if OUT.exists():
         shutil.rmtree(OUT)
+    if not cfg["site"].get("public", True):
+        build_private()
+        return
     (OUT / "posts").mkdir(parents=True)
     (OUT / "category").mkdir()
     shutil.copytree(ROOT / "static", OUT / "static")
