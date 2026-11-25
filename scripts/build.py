@@ -118,17 +118,25 @@ def layout(cfg: dict, prefix: str, title: str, body: str, description: str = "",
 <link rel="stylesheet" href="{prefix}static/style.css">
 </head>
 <body>
-<div class="ticker"><div class="ticker-in"><span>{esc(site['subtitle'])}</span><span>NEW STORIES EVERY MON · WED · FRI</span><span>{esc(site['subtitle'])}</span><span>NEW STORIES EVERY MON · WED · FRI</span><span>{esc(site['subtitle'])}</span><span>NEW STORIES EVERY MON · WED · FRI</span></div></div>
-<header class="site-header">
-  <div class="bar">
-    <a class="brand" href="{prefix}index.html" aria-label="{esc(site['title'])}">
-      <img src="{prefix}static/logo.png" alt="">
-      <span class="wordmark">QUEEEN<i>magazine</i></span>
+
+<div class="bg-deco" aria-hidden="true"><img class="bd-r1" src="{prefix}static/ribbon.png" alt=""><img class="bd-r2" src="{prefix}static/ribbon.png" alt=""></div>
+<header class="masthead">
+  <img class="mh-ribbon" src="{prefix}static/ribbon-white.png" alt="" aria-hidden="true">
+  <img class="mh-ribbon2" src="{prefix}static/ribbon-white.png" alt="" aria-hidden="true">
+  <div class="mh-inner">
+    <a class="mh-brand" href="{prefix}index.html" aria-label="{esc(site['title'])}">
+      <img class="mh-tiara" src="{prefix}static/tiara.svg" alt="">
+      <span class="mh-word">QUEEEN</span>
+      <span class="mh-sub">magazine</span>
     </a>
-    <a class="about-link" href="{prefix}about.html">ABOUT</a>
+    <p class="mh-tag">{esc(site['subtitle'])}</p>
   </div>
-  <nav class="nav">{nav}</nav>
 </header>
+<nav class="navbar"><div class="nav-in">
+  <a class="nb-home" href="{prefix}index.html" aria-label="TOP"><img src="{prefix}static/logo-white.png" alt=""></a>
+  <div class="nav">{nav}</div>
+  <a class="about-link" href="{prefix}about.html">ABOUT</a>
+</div></nav>
 <main>
 {body}
 </main>
