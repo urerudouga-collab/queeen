@@ -52,8 +52,13 @@ def esc(s: str) -> str:
 
 def eyecatch(post: dict, cfg: dict, prefix: str, size: str = "") -> str:
     cat = cfg["categories"][post["category"]]
+    img = post.get("image") or ""
+    if img and not img.startswith("http"):
+        img = prefix + img  # リポジトリ内の写真（例: static/photos/xxx.jpg）
+    photo = (f'<img class="eye-photo" src="{esc(img)}" alt="" loading="lazy">' if img else "")
     return (
-        f'<div class="eye eye-{post["category"]} {size}">'
+        f'<div class="eye eye-{post["category"]} {size}{" has-photo" if img else ""}">'
+        f'{photo}'
         f'<img class="eye-logo" src="{prefix}static/logo.png" alt="" aria-hidden="true">'
         f'<span class="eye-en">{esc(cat["en"])}</span>'
         f'<span class="eye-word">{esc(post.get("keyword", ""))}</span>'
@@ -188,6 +193,7 @@ def page_post(cfg: dict, post: dict, posts: list[dict]) -> str:
   <div class="post-body">{post['body_html']}</div>
   {note}
   {sources}
+  {('<p class="credit">写真：' + esc(post['image_credit']) + '</p>') if post.get('image_credit') else ''}
 </article>
 <h2 class="sec">MORE<small>こちらもおすすめ</small></h2>
 <section class="grid">{rel}</section>"""
