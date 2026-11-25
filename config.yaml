@@ -1,0 +1,45 @@
+# ===== サイトの基本設定（ここを書き換えると、サイト全体に反映されます） =====
+site:
+  title: "QUEEEN MAGAZINE"
+  subtitle: "輝くミセスのための、毎日のヒント"
+  description: "ミセスクイーンが届ける、美容・ファッション・健康・ライフスタイル・自己実現のWebマガジン。"
+  # 公開後のURL（独自ドメインにしたらここを書き換えます）
+  url: "https://example.github.io/mrs-queen-magazine"
+  contest_url: ""   # ミセスクイーンコンテスト公式サイトのURL（あれば）
+
+# ===== 投稿のしかた =====
+# review : 記事は「確認待ち」として届き、OKを押すと公開（最初の1か月はこちら）
+# auto   : 確認なしでそのまま公開（AIのチェックで引っかかった記事だけ確認待ちに回ります）
+mode: review
+
+# AIの設定
+ai:
+  model: "claude-opus-5-5"
+  effort: "medium"
+
+# ===== カテゴリと、話題を集めるキーワード =====
+categories:
+  beauty:
+    name: "美容"
+    en: "BEAUTY"
+    keywords: ["スキンケア 40代", "エイジングケア", "メイク トレンド 大人", "ヘアケア 大人女性"]
+  fashion:
+    name: "ファッション"
+    en: "FASHION"
+    keywords: ["大人 コーデ トレンド", "ミセス ファッション", "フォーマル ドレス 着こなし", "ウォーキング 姿勢 美しい"]
+  wellness:
+    name: "健康・ウェルネス"
+    en: "WELLNESS"
+    keywords: ["睡眠 質 女性", "更年期 セルフケア", "ピラティス ヨガ 人気", "女性 健康 食事"]
+  lifestyle:
+    name: "ライフスタイル"
+    en: "LIFESTYLE"
+    keywords: ["時短家事", "夫婦 関係 コツ", "大人の旅行 女性", "季節 行事 暮らし"]
+  career:
+    name: "自己実現・キャリア"
+    en: "CAREER"
+    keywords: ["女性 起業", "学び直し 女性", "ママ 挑戦", "女性 リーダー"]
+  queen:
+    name: "ミセスクイーン"
+    en: "MRS. QUEEN"
+    keywords: ["ミセスコンテスト", "ミセス ミスコン"]

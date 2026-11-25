@@ -1,0 +1,60 @@
+# 話題を集めて、AIが記事を書く（決まった時間に自動で動きます）
+name: 自動で記事を書く
+
+on:
+  schedule:
+    # 月・水・金の朝7時（日本時間）。GitHubの時計は日本より9時間遅いので、前日の22時で指定しています
+    - cron: "0 22 * * 0,2,4"
+  workflow_dispatch:   # 「Run workflow」ボタンで今すぐ1本書くこともできます
+
+permissions:
+  contents: write
+  pull-requests: write
+  pages: write
+  id-token: write
+
+jobs:
+  write:
+    runs-on: ubuntu-latest
+    outputs:
+      needs_review: ${{ steps.write.outputs.needs_review }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: 話題を集める
+        run: python scripts/collect.py
+      - name: 記事を書く
+        id: write
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python scripts/write_article.py
+
+      # 確認モード：「確認待ち」として届ける（OKなら Merge を押すと公開）
+      - name: 確認待ちとして届ける
+        if: steps.write.outputs.needs_review == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: article/${{ github.run_id }}
+          commit-message: "記事: ${{ steps.write.outputs.title }}"
+          title: "【確認待ち】${{ steps.write.outputs.title }}"
+          body-path: data/review.md
+          add-paths: content/posts/*.md
+
+      # 自動モード：そのまま公開
+      - name: そのまま公開
+        if: steps.write.outputs.needs_review == 'false'
+        run: |
+          git config user.name "queeen-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content/posts
+          git commit -m "記事: ${{ steps.write.outputs.title }}"
+          git push
+
+  publish:
+    needs: write
+    if: needs.write.outputs.needs_review == 'false'
+    uses: ./.github/workflows/publish.yml
