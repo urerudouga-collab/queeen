@@ -4,7 +4,7 @@ site:
   subtitle: "輝くミセスのための、毎日のヒント"
   description: "ミセスクイーンが届ける、美容・ファッション・健康・ライフスタイル・自己実現のWebマガジン。"
   # 公開後のURL（独自ドメインにしたらここを書き換えます）
-  url: "https://example.github.io/mrs-queen-magazine"
+  url: "https://urerudouga-collab.github.io/queeen"
   contest_url: ""   # ミセスクイーンコンテスト公式サイトのURL（あれば）
 
 # ===== 投稿のしかた =====
