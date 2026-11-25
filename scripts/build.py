@@ -87,6 +87,12 @@ def card(post: dict, cfg: dict, prefix: str, cls: str = "") -> str:
 </a>"""
 
 
+def ogp_url(cfg: dict, slug: str = "") -> str:
+    """SNS用の画像のURL（記事ごとの画像がなければサイト共通の画像）"""
+    name = slug if slug and (ROOT / "static" / "ogp" / f"{slug}.jpg").exists() else "default"
+    return f"{cfg['site']['url'].rstrip('/')}/static/ogp/{name}.jpg"
+
+
 def layout(cfg: dict, prefix: str, title: str, body: str, description: str = "", active: str = "", og_image: str = "") -> str:
     site = cfg["site"]
     on = ' class="on"'
@@ -110,7 +116,12 @@ def layout(cfg: dict, prefix: str, title: str, body: str, description: str = "",
 <meta name="description" content="{esc(description or site['description'])}">
 <meta property="og:title" content="{esc(full_title)}">
 <meta property="og:description" content="{esc(description or site['description'])}">
-{f'<meta property="og:image" content="{esc(og_image)}">' if og_image else ''}
+<meta property="og:type" content="{'article' if og_image else 'website'}">
+<meta property="og:site_name" content="{esc(site['title'])}">
+<meta property="og:image" content="{esc(ogp_url(cfg, og_image))}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#fbf7f4">
 <link rel="icon" href="{prefix}static/logo.png">
 <link rel="alternate" type="application/rss+xml" href="{prefix}feed.xml" title="{esc(site['title'])}">
@@ -188,7 +199,7 @@ def page_index(cfg: dict, posts: list[dict]) -> str:
             + f'<section class="sec"><h2 class="sec-title"><span>Pick Up</span><small>注目の記事</small></h2><div class="picks">{picks}</div></section>'
             + f'<section class="sec"><h2 class="sec-title"><span>Categories</span><small>カテゴリから探す</small></h2><div class="cats">{cats}</div></section>'
             + (f'<section class="sec"><h2 class="sec-title"><span>Latest</span><small>新着記事</small></h2><div class="grid">{grid}</div></section>' if rest else ""))
-    return layout(cfg, "", cfg["site"]["title"], body, og_image=photo_url(top, ""))
+    return layout(cfg, "", cfg["site"]["title"], body, og_image="")
 
 
 def page_category(cfg: dict, key: str, posts: list[dict]) -> str:
@@ -234,7 +245,7 @@ def page_post(cfg: dict, post: dict, posts: list[dict]) -> str:
   <p class="back"><a href="../index.html">← TOP</a><a href="../category/{post['category']}.html">{esc(cat['name'])}の記事一覧 →</a></p>
 </article>
 <section class="sec"><h2 class="sec-title"><span>More Stories</span><small>こちらもおすすめ</small></h2><div class="grid">{rel}</div></section>"""
-    return layout(cfg, "../", post["title"], body, post["description"], active=post["category"], og_image=photo_url(post, ""))
+    return layout(cfg, "../", post["title"], body, post["description"], active=post["category"], og_image=post["slug"])
 
 
 def page_about(cfg: dict) -> str:
