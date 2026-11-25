@@ -1,0 +1,27 @@
+# 以前のサイト（QUEEEN MEDIA）の記事を取り込む（1回だけ使う作業用）
+name: QUEEEN MEDIAの記事を取り込む
+
+on:
+  push:
+    branches: [import/queeen-media]
+    paths: [scripts/import_wp.py, .github/workflows/import-queeen-media.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests pyyaml beautifulsoup4 markdownify pillow
+      - run: python scripts/import_wp.py
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content/posts static/imported
+          git commit -m "QUEEEN MEDIAの記事を取り込み" || echo "変更なし"
+          git push
