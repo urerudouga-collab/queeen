@@ -5,9 +5,13 @@ site:
   description: "ミセスクイーンが届ける、美容・ファッション・健康・ライフスタイル・自己実現のWebマガジン。"
   # 公開後のURL（独自ドメインにしたらここを書き換えます）
   url: "https://urerudouga-collab.github.io/queeen"
-  contest_url: ""
-  # true=公開中 / false=非公開（「準備中」の画面だけを表示し、検索エンジンにも載せません）
-  public: false   # ミセスクイーンコンテスト公式サイトのURL（あれば）
+  contest_url: ""   # ミセスクイーンコンテスト公式サイトのURL（あれば）
+  # 公開のしかた
+  #   true    = 公開中
+  #   limited = 限定公開（トップは「準備中」。下の preview_key の入ったURLを知っている人だけが見られ、検索エンジンにも載りません）
+  #   false   = 非公開（「準備中」の画面だけ）
+  public: limited
+  preview_key: "preview-734d3c1cd3e4"
 
 # ===== 投稿のしかた =====
 # review : 記事は「確認待ち」として届き、OKを押すと公開（最初の1か月はこちら）

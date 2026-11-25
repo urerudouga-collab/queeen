@@ -93,6 +93,7 @@ def layout(cfg: dict, prefix: str, title: str, body: str, description: str = "",
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(full_title)}</title>
+{'' if site.get('public', True) is True else '<meta name="robots" content="noindex, nofollow">'}
 <meta name="description" content="{esc(description or site['description'])}">
 <meta property="og:title" content="{esc(full_title)}">
 <meta property="og:description" content="{esc(description or site['description'])}">
@@ -243,13 +244,19 @@ def build_private() -> None:
 
 
 def main() -> None:
+    global OUT
     cfg = load_config()
     posts = load_posts()
-    if OUT.exists():
-        shutil.rmtree(OUT)
-    if not cfg["site"].get("public", True):
+    root = OUT
+    if root.exists():
+        shutil.rmtree(root)
+    mode = cfg["site"].get("public", True)
+    if mode is not True:
         build_private()
-        return
+        if mode != "limited":
+            return
+        OUT = root / cfg["site"]["preview_key"]   # 限定公開：秘密のURLの下にサイト全体を置く
+        cfg["site"]["url"] = cfg["site"]["url"].rstrip("/") + "/" + cfg["site"]["preview_key"]
     (OUT / "posts").mkdir(parents=True)
     (OUT / "category").mkdir()
     shutil.copytree(ROOT / "static", OUT / "static")
@@ -261,7 +268,7 @@ def main() -> None:
         (OUT / "posts" / f"{p['slug']}.html").write_text(page_post(cfg, p, posts), encoding="utf-8")
     (OUT / "feed.xml").write_text(feed(cfg, posts), encoding="utf-8")
     (OUT / "sitemap.xml").write_text(sitemap(cfg, posts), encoding="utf-8")
-    (OUT / ".nojekyll").write_text("")
+    (root / ".nojekyll").write_text("")
     print(f"built {len(posts)} posts -> {OUT}")
 
 
