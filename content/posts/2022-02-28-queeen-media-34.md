@@ -1,6 +1,6 @@
 ---
 title: 「書」も「画」も超えた先
-description: Part 1 〜前編〜 「書」も「画」も超えた先にある自由でボーダーレスなアート
+description: Part1〜前編〜「書」も「画」も超えた先にある自由でボーダーレスなアート作品を生み続ける書家現代アートの世界に、「書道」というジャンルで新風を吹かせ、今なお、…
 date: '2022-02-28'
 category: lifestyle
 keyword: ARTIST
