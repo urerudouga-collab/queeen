@@ -4,6 +4,8 @@ description: "顔は潤っているのに、なぜか粉をふく、メイクが
 date: 2026-11-25
 category: beauty
 keyword: "冬の隠れ乾燥ケア"
+image: "https://images.unsplash.com/photo-1686831451910-be038fcaa48c?w=1600&q=80&auto=format&fit=crop"
+image_credit: "Natallia Photo / Unsplash"
 sources: []
 ---
 

@@ -12,6 +12,12 @@
    - 本文は情報源の文章を流用せずゼロから書く。メモにない数字・研究・発言は書かない。
    - `sources` には実際に読んだページの title / site / url だけを書く（URLは実際に開けたものだけ）。
    - `keyword` はアイキャッチに出る全角6〜12字の短い言葉。
+5-2. カバー写真を選ぶ：無料写真サイト Unsplash（https://unsplash.com）で、記事の内容に合う写真を探す（英語のキーワードで検索、`license=free` の無料写真のみ。Unsplash+ の有料写真は使わない）。上品で明るく、ブランドのピンク系の世界観に合うもの、人物の顔がはっきり写っていないもの・ロゴや商品名が目立たないものを優先する。front matter に次の2行を加える（写真のURLは `https://images.unsplash.com/photo-xxxx` の形のものに `?w=1600&q=80&auto=format&fit=crop` を付ける）。
+   ```
+   image: "https://images.unsplash.com/photo-xxxx?w=1600&q=80&auto=format&fit=crop"
+   image_credit: "撮影者名 / Unsplash"
+   ```
+   合う写真が見つからない場合は、この2行を入れなくてよい（ピンクのデザイン画像が表示される）。
 6. 自分でチェック：編集方針に照らして、創作した事実・効果の断定・流用・不適切表現がないか読み直し、直す。
 7. `pip install -q markdown pyyaml && python scripts/build.py` が成功することを確認する（`_site/` はコミットしない）。
 8. 届ける：

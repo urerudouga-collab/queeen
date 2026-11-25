@@ -4,6 +4,8 @@ description: "寒さで寝つけない、夜中に目が覚める。冬は睡眠
 date: 2026-11-21
 category: wellness
 keyword: "冬の快眠習慣"
+image: "https://images.unsplash.com/photo-1612152605347-f93296cb657d?w=1600&q=80&auto=format&fit=crop"
+image_credit: "Isaac Martin / Unsplash"
 sources: []
 ---
 

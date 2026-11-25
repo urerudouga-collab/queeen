@@ -4,6 +4,8 @@ description: "年末にまとめて大掃除をしようとすると、疲れて
 date: 2026-11-19
 category: lifestyle
 keyword: "分けて進める大掃除"
+image: "https://images.unsplash.com/photo-1554995207-c18c203602cb?w=1600&q=80&auto=format&fit=crop"
+image_credit: "Kara Eads / Unsplash"
 sources: []
 ---
 

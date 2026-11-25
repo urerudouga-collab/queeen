@@ -4,6 +4,8 @@ description: "年末年始は、食事会やパーティーが続く季節。張
 date: 2026-11-23
 category: fashion
 keyword: "年末年始のきれいめコーデ"
+image: "https://images.unsplash.com/photo-1765229277058-177cd0dead2c?w=1600&q=80&auto=format&fit=crop"
+image_credit: "FOTOGRAFÍA EDITORIAL / Unsplash"
 sources: []
 ---
 

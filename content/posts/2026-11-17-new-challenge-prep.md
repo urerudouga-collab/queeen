@@ -4,6 +4,8 @@ description: "学び直し、仕事、趣味、そしてコンテストへの挑
 date: 2026-11-17
 category: career
 keyword: "来年の挑戦を叶える準備"
+image: "https://images.unsplash.com/photo-1650735311937-1876825e971b?w=1600&q=80&auto=format&fit=crop"
+image_credit: "dlxmedia.hu / Unsplash"
 sources: []
 ---
 
