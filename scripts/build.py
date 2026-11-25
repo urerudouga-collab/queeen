@@ -127,7 +127,7 @@ def layout(cfg: dict, prefix: str, title: str, body: str, description: str = "",
   <img class="mh-ribbon2" src="{prefix}static/ribbon-white.png" alt="" aria-hidden="true">
   <div class="mh-inner">
     <a class="mh-brand" href="{prefix}index.html" aria-label="{esc(site['title'])}">
-      <img class="mh-tiara" src="{prefix}static/tiara.svg" alt="">
+      <img class="mh-tiara" src="{prefix}static/tiara2.svg" alt="">
       <span class="mh-word">QUEEEN</span>
       <span class="mh-sub">magazine</span>
     </a>
