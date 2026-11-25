@@ -204,5 +204,5 @@ a:hover .vis img{transform:scale(1.05)}
   .post-vis{margin:0 -18px}
   .post-body blockquote{padding:30px 22px 24px}
 }
-@media (max-width:700px){body::before,.masthead::before{display:none}.sec-title::after{display:none}}
+@media (max-width:700px){body::before{background-size:240px 130px;opacity:.06}.masthead::before{background-size:200px 108px;opacity:.08}}
 @media (prefers-reduced-motion:reduce){.ticker-in{animation:none}*{transition:none!important}}
